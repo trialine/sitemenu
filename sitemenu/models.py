@@ -108,13 +108,14 @@ class SiteMenu(models.Model):
 
             self.has_childs = False
             tmp_sort = 1
-            for child in self.get_childs(only_enabled=False):
-                self.has_childs = True
-                child._get_parent = self
-                if rebuild_sort:
-                    child.sort = tmp_sort
-                    tmp_sort += 1
-                child.save(rebuild_sort=rebuild_sort)
+            if self.pk:
+                for child in self.get_childs(only_enabled=False):
+                    self.has_childs = True
+                    child._get_parent = self
+                    if rebuild_sort:
+                        child.sort = tmp_sort
+                        tmp_sort += 1
+                    child.save(rebuild_sort=rebuild_sort)
 
             if not self.has_childs:
                 self.redirect_to_first_child = False
